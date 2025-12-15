@@ -1,0 +1,42 @@
+﻿@page "/"
+@using MudBlazor
+@using Web.Communication.Requests.Auth
+@using Web.Services.Auth
+@inject NavigationManager Navigation
+
+<MudPaper Class="pa-6 mx-auto mt-12" Style="max-width: 400px;">
+    <MudText Typo="Typo.h5" Class="mb-4" Align="Align.Center">Login Social</MudText>
+
+    <MudStack Spacing="2">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="LoginWithGoogle" StartIcon="@Icons.Material.Filled.GMobiledata">
+            Entrar com Google
+        </MudButton>
+
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="LoginWithGitHub" StartIcon="@Icons.Material.Filled.Code">
+            Entrar com GitHub
+        </MudButton>
+    </MudStack>
+</MudPaper>
+
+@code {
+    [Inject] private IAuthService _authService { get; set; } = default!;
+
+    private async Task LoginWithGoogle()
+    {
+
+        var response = await _authService.GetProviderRedirectUrlAsync("google");
+
+        // Redireciona para o endpoint do backend que gera a URL do Google OAuth
+        if (response is not null)
+            Navigation.NavigateTo(response.Url, forceLoad: true);
+    }
+
+    private async Task LoginWithGitHub()
+    {
+        var response = await _authService.GetProviderRedirectUrlAsync("github");
+
+        // Redireciona para o endpoint do backend que gera a URL do Google OAuth
+        if (response is not null)
+            Navigation.NavigateTo(response.Url, forceLoad: true);
+    }
+}

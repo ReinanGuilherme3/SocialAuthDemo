@@ -1,0 +1,50 @@
+﻿@page "/auth/callback/github"
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using Microsoft.AspNetCore.WebUtilities
+@using Web.Services.Auth
+@inject ProtectedLocalStorage LocalStorage
+
+<MudPaper Class="pa-6 mx-auto mt-12" Style="max-width: 400px;" Align="Align.Center">
+    <MudText Typo="Typo.h6">Autenticando...</MudText>
+</MudPaper>
+
+@code {
+    [Parameter] public string? code { get; set; }
+    [Parameter] public string? state { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // Pega o 'code' da query string
+        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("code", out var codeValues))
+        {
+            code = codeValues.FirstOrDefault();
+        }
+
+        if (!string.IsNullOrEmpty(code))
+        {
+            var result = await AuthService.LoginAsync("github", code!);
+
+            if (result is not null)
+            {
+                // Agora é seguro gravar
+                await LocalStorage.SetAsync("jwt", result.Token);
+
+                // Redireciona para a página inicial ou dashboard
+                Navigation.NavigateTo("/home");
+            }
+            else
+            {
+                // Redireciona para página de erro ou exibe mensagem
+                Navigation.NavigateTo("/login-failed");
+            }
+        }
+        else
+        {
+            // Nenhum código recebido → login falhou
+            Navigation.NavigateTo("/login-failed");
+        }
+    }
+}

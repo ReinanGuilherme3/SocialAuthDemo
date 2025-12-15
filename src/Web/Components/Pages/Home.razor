@@ -1,0 +1,51 @@
+﻿@page "/home"
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using System.IdentityModel.Tokens.Jwt
+@using Web.Services.Auth
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+@inject ProtectedLocalStorage LocalStorage
+
+@if (UserClaims is not null)
+{
+    <MudPaper Class="pa-6 mx-auto mt-12" Style="max-width: 500px;">
+        <MudText Typo="Typo.h5" Class="mb-4" Align="Align.Center">Dashboard do Usuário</MudText>
+
+        <MudStack Spacing="2">
+            <MudText>Email: @UserClaims["email"]</MudText>
+            <MudText>Nome: @UserClaims["name"]</MudText>
+            <MudText>Provedor: @UserClaims["provider"]</MudText>
+            <MudText>ExternalId: @UserClaims["externalId"]</MudText>
+            @if (UserClaims.ContainsKey("picture") && !string.IsNullOrEmpty(UserClaims["picture"]))
+            {
+                <MudAvatar Size="Size.Large">
+                    <MudImage Src="@UserClaims["picture"]" />
+                </MudAvatar>
+            }
+        </MudStack>
+    </MudPaper>
+}
+
+    @code {
+
+    private Dictionary<string, string>? UserClaims;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        var result = await LocalStorage.GetAsync<string>("jwt");
+        var jwtToken = result.Success ? result.Value : null;
+
+        UserClaims = AuthService.GetUserClaims(jwtToken);
+
+        if (UserClaims is null)
+        {
+            Navigation.NavigateTo("/");
+            return;
+        }
+
+        await InvokeAsync(StateHasChanged);
+    }
+}
