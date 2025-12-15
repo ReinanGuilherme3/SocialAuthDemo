@@ -1,4 +1,4 @@
-﻿@page "/auth/callback/github"
+﻿@page "/auth/callback/{provider}"
 @inject IAuthService AuthService
 @inject NavigationManager Navigation
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
@@ -11,6 +11,7 @@
 </MudPaper>
 
 @code {
+    [Parameter] public string? provider { get; set; }
     [Parameter] public string? code { get; set; }
     [Parameter] public string? state { get; set; }
 
@@ -25,7 +26,7 @@
 
         if (!string.IsNullOrEmpty(code))
         {
-            var result = await AuthService.LoginAsync("github", code!);
+            var result = await AuthService.LoginAsync(provider, code!);
 
             if (result is not null)
             {

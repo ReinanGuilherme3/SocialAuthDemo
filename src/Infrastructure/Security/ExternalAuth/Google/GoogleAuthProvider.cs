@@ -1,5 +1,4 @@
-﻿using Domain.Security.ExternalAuth;
-using Google.Apis.Auth;
+﻿using Google.Apis.Auth;
 using Microsoft.Extensions.Options;
 using System.Web;
 
