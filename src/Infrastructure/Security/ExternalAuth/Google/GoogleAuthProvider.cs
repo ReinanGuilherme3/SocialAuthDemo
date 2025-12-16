@@ -46,7 +46,7 @@ public class GoogleAuthProvider : IExternalAuthProvider
 
         var token = await _googleApi.ExchangeCodeAsync(data);
 
-        if (string.IsNullOrEmpty(token.Content.id_token))
+        if (!token.IsSuccessful || string.IsNullOrEmpty(token.Content.id_token))
             throw new InvalidOperationException("Invalid Google id_token");
 
         var payload = await GoogleJsonWebSignature.ValidateAsync(

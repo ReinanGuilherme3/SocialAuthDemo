@@ -6,7 +6,7 @@
 @using Web.Services.Auth
 @inject ProtectedLocalStorage LocalStorage
 
-<MudPaper Class="pa-6 mx-auto mt-12" Style="max-width: 400px;" Align="Align.Center">
+<MudPaper Class="pa-6 mx-auto mt-12" Style="max-width: 400px;">
     <MudText Typo="Typo.h6">Autenticando...</MudText>
 </MudPaper>
 
@@ -24,7 +24,7 @@
             code = codeValues.FirstOrDefault();
         }
 
-        if (!string.IsNullOrEmpty(code))
+        if (!string.IsNullOrEmpty(code) && !string.IsNullOrWhiteSpace(provider))
         {
             var result = await AuthService.LoginAsync(provider, code!);
 
