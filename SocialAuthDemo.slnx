@@ -7,16 +7,16 @@
     <Project Path="src/Web/Web.csproj" Id="9e01875e-7870-4d34-af1a-12cf0a068f6f" />
   </Folder>
   <Folder Name="/src/backend/">
-    <Project Path="src/Application/Application.csproj">
+    <Project Path="src/backend/Application/Application.csproj">
       <Platform Solution="*|x64" Project="x64" />
     </Project>
-    <Project Path="src/Communication/Communication.csproj">
+    <Project Path="src/backend/Communication/Communication.csproj">
       <Platform Solution="*|x64" Project="x64" />
     </Project>
-    <Project Path="src/Domain/Domain.csproj">
+    <Project Path="src/backend/Domain/Domain.csproj">
       <Platform Solution="*|x64" Project="x64" />
     </Project>
-    <Project Path="src/Infrastructure/Infrastructure.csproj">
+    <Project Path="src/backend/Infrastructure/Infrastructure.csproj">
       <Platform Solution="*|x64" Project="x64" />
     </Project>
   </Folder>
